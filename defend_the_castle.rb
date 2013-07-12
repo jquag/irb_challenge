@@ -5,13 +5,16 @@ module IRBChallenge
 
     def initialize(game)
       @game = game
-      @complete = true #TODO change this back to false
+      @complete = false
     end
 
     def help_message
       ['Defend the castle from the dragon.', '',
        'Employ strategy:',
-       '> g.o[bjective].employ {|dragon_maneuver| <strategic response>}']
+       '> g.employ {|dragon, castle| <strategic response>}', '',
+       'Attack the dragon:',
+      '> dragon.attack blah blah blah'
+      ]
     end
 
     def to_s

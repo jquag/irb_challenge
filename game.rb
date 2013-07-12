@@ -19,42 +19,69 @@ module IRBChallenge
   class Game
     def initialize
       @level = 1
-      @objectives = [DefendTheCastle.new(self), KillTheInfection.new(self), TurnWaterIntoWine.new(self), FindTheNeedle.new(self), OpenTheLocker.new(self)]
+      @objectives = [FindTheNeedle.new(self), DefendTheCastle.new(self), KillTheInfection.new(self), TurnWaterIntoWine.new(self), OpenTheLocker.new(self)]
       @start_time = Time.now
-      help
+      objective
     end
-
-    def objective
-      @objectives[@level - 1]
-    end
-
-    alias_method :o, :objective
 
     def to_s
-      "IRB Game {level: #{@level}, objective: #{objective}}"
+      "IRB Game {level: #{@level}, objective: #{current_objective}}"
     end
 
     def help
-      if objective == nil
+      if current_objective == nil
         IRBChallenge.message 'This game is over.', 'Play again:', '> g = play'
       else
-        IRBChallenge.message('-HELP-  ', 'Show this message:', '> g.help', '', 'Skip objective:', '> g.skip', '', '-OBJECTIVE-', *objective.help_message)
+        IRBChallenge.message('-HELP-', '', 'Show this message:', '> g.help', '', 'View current objective:', '> g.objective', '', 'Skip objective:', '> g.skip')
       end
     end
 
     def level_complete(completed)
-      if completed == objective && objective.complete
+      if completed == current_objective
         @level += 1
         if @level > @objectives.size
-          IRBChallenge.message('Great Job.', "You finished the game in #{Time.now - @start_time} seconds\n")
+          IRBChallenge.message("You finished the game in #{Time.now - @start_time} seconds\n", '', score, '', *results)
         else
-          IRBChallenge.message('-NEXT OBJECTIVE-', *(o.help_message))
+          objective
         end
-      else
-        IRBChallenge.message("You ain't got to lie")
       end
     end
 
+    def method_missing(meth, *args)
+      if current_objective.respond_to?(meth)
+        current_objective.send(meth, *args)
+      else
+        super
+      end
+    end
+
+    def objective
+      IRBChallenge.message('-OBJECTIVE-', '', *current_objective.help_message)
+    end
+
+    def skip
+      IRBChallenge.message("Skipping '#{current_objective}'.")
+      level_complete(current_objective)
+    end
+
+    private
+
+    def score
+      score = 0
+      @objectives.each { |o| score += 1 if o.complete }
+      "score: #{score} / #{@objectives.size}"
+    end
+
+    def results
+      r = []
+      r.tap do
+        @objectives.each { |o| r.push("#{o} - #{o.complete ? 'completed' : 'skipped'}") }
+      end
+    end
+
+    def current_objective
+      @objectives[@level - 1]
+    end
   end
 end
 
@@ -62,4 +89,4 @@ def play
   IRBChallenge::Game.new
 end
 
-IRBChallenge.message('IRB CHALLENGE', '', 'Get started:', '> g = play')
+IRBChallenge.message('-IRB CHALLENGE-', '', 'Get started:', '> g = play', '> g.help')

@@ -4,7 +4,7 @@ module IRBChallenge
 
     def initialize(game)
       @game = game
-      @complete = true #TODO change this back to false
+      @complete = false
       @combination = [rand(10), rand(10), rand(10), rand(10), rand(10), rand(10)]
     end
 
@@ -12,10 +12,10 @@ module IRBChallenge
       ['Set the correct combination then open the locker.',
       '',
       'set the combination:',
-      '> <game>.o[bjective].set_combo(i1, i2, i3, i4, i5, i6)',
+      '> g.set_combo(i1, i2, i3, i4, i5, i6)',
       '',
       'open the locker if #set_combo returns true',
-      '> <game>.o[bjective].open_locker']
+      '> g.open_locker']
     end
 
     def to_s

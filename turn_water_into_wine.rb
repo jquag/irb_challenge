@@ -13,10 +13,14 @@ module IRBChallenge
       ['Turn the water into (red) wine.',
        '',
        'Access the beverage:',
-       '> <game>.o[bjective].beverage',
+       '> g.beverage',
        '',
        'Taste it:',
-       '> <game>.o[bjective].taste']
+       '> g.taste']
+    end
+
+    def to_s
+      'Turn water into wine'
     end
 
     def taste

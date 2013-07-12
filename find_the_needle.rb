@@ -7,18 +7,19 @@ module IRBChallenge
 
     def initialize(game)
       @game = game
-      @complete = true #TODO change this back to false
+      @complete = false
       @needle = Needle.new
       @haystack = []
       build_haystack(@haystack, rand(HAYSTACK_SIZE))
     end
 
     def help_message
-      ['access the haystack:',
-      '> <game>.o[bjective].haystack',
-      '',
-      'present the needle:',
-      '> <game>.o[bjective].present(needle)']
+      ['Find the needle in the haystack.', '',
+       'access the haystack:',
+       '> g.haystack',
+       '',
+       'present the needle:',
+       '> g.present(needle)']
     end
 
     def to_s

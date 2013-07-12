@@ -4,7 +4,7 @@ module IRBChallenge
 
     def initialize(game)
       @game = game
-      @complete = true #TODO change this back to false
+      @complete = false
       @cells = [
           {:type => :bacteria, :antigen => 'cell'},
           {:type => :healthy_cell, :antigen => 'cell_0'},
@@ -41,10 +41,10 @@ module IRBChallenge
       ['Construct an antibody (regex) that targets the bacteria while avoiding healthy cells.',
         '',
         'view the infection to see the antigens for all of the cells:',
-        '> <game>.o[bjective].view',
+        '> g.view',
         '',
         'deliver an antibody to try and kill the infection:',
-        '> <game>.o[bjective].deliver_antibody(/pattern/)']
+        '> g.deliver_antibody(/pattern/)']
     end
 
     def view
