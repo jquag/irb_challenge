@@ -38,7 +38,7 @@ module IRBChallenge
       if objective == nil
         IRBChallenge.message 'This game is over.', 'Play again:', '> g = play'
       else
-        IRBChallenge.message('-HELP-  ', 'Show this message:', '> g.help', '', 'Skip objective:', '> g.skip', '', '-OBJECTIVE-', *objective.help_message)
+        IRBChallenge.message('-HELP-  ', 'Show this message:', '> g.help', '', 'Skip an objective:', '> g.skip', '', '-OBJECTIVE-', *objective.help_message)
       end
     end
 
