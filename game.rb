@@ -3,17 +3,19 @@ load File.join(File.dirname(__FILE__), 'open_the_locker.rb')
 load File.join(File.dirname(__FILE__), 'kill_the_infection.rb')
 load File.join(File.dirname(__FILE__), 'turn_water_into_wine.rb')
 load File.join(File.dirname(__FILE__), 'defend_the_castle.rb')
-#defend the castle (write a proc/or class to handle various projectiles/dragon maneuvers ... will need to update as you learn ...maybe something like simon)
 
-#TODO make objective private and pass through method calls
-#TODO make a skip level function
+#TODO play through
+#TODO fix any grammar
+#TODO better intro message ... show help instead
+#TODO maybe rename objective so tab works better
+#TODO time for each level
 
 module IRBChallenge
 
   def IRBChallenge.message(*lines)
-    puts "\n ----------------------------------------"
-    lines.each {|l| puts "|  #{l}"}
-    puts " ----------------------------------------\n\n"
+    puts
+    lines.each {|l| puts "   #{l}"}
+    puts
   end
 
   class Game
@@ -32,7 +34,7 @@ module IRBChallenge
       if current_objective == nil
         IRBChallenge.message 'This game is over.', 'Play again:', '> g = play'
       else
-        IRBChallenge.message('-HELP-', '', 'Show this message:', '> g.help', '', 'View current objective:', '> g.objective', '', 'Skip objective:', '> g.skip')
+        IRBChallenge.message('-HELP-', '', 'Show this message:', '> g.help', '', 'View current objective:', '> g.objective', '', 'Skip an objective:', '> g.skip')
       end
     end
 
@@ -42,7 +44,7 @@ module IRBChallenge
         if @level > @objectives.size
           IRBChallenge.message("You finished the game in #{Time.now - @start_time} seconds\n", '', score, '', *results)
         else
-          objective
+          IRBChallenge.message('Review next objective:', '> g.objective')
         end
       end
     end

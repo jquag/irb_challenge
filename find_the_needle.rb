@@ -14,7 +14,7 @@ module IRBChallenge
     end
 
     def help_message
-      ['Find the needle in the haystack.', '',
+      ['Find the needle in the haystack', '',
        'access the haystack:',
        '> g.haystack',
        '',
