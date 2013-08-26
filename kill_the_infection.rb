@@ -1,10 +1,10 @@
+load File.join(File.dirname(__FILE__), 'objective.rb')
+
 module IRBChallenge
-  class KillTheInfection
-    attr_reader :complete
+  class KillTheInfection < Objective
 
     def initialize(game)
-      @game = game
-      @complete = false
+      super
       @cells = [
           {:type => :bacteria, :antigen => 'cell'},
           {:type => :healthy_cell, :antigen => 'cell_0'},
@@ -48,13 +48,12 @@ module IRBChallenge
     end
 
     def view
-      msg = %w(bacteria-)
-      @cells.select {|c| c[:type] == :bacteria}.each do |b|
-        msg.push("  antigen: #{b[:antigen]}")
-      end
-      msg.push('', 'healthy cells-')
-      @cells.select {|c| c[:type] == :healthy_cell}.each do |b|
-        msg.push("  antigen: #{b[:antigen]}")
+      msg = ["bacteria\t\thealthy cells", "--------\t\t-------------"]
+      bacteria = @cells.select {|c| c[:type] == :bacteria}
+      good_cells = @cells.select {|c| c[:type] == :healthy_cell}
+
+      bacteria.each_with_index do |b, i|
+        msg.push("antigen: #{b[:antigen]}\tantigen: #{good_cells[i][:antigen]}")
       end
       IRBChallenge.message(*msg)
     end
@@ -67,19 +66,18 @@ module IRBChallenge
       @cells.each do |cell|
         if cell[:antigen] =~ antibiotic
           if cell[:type] == :healthy_cell
-            IRBChallenge.message('Your antibody killed one or more healthy cells.', '', "#{cell[:antigen]}")
+            IRBChallenge.message('Your antibody killed one or more healthy cells.', '', 'e.g.', "#{cell[:antigen]}")
             return
           end
         else
           if cell[:type] == :bacteria
-            IRBChallenge.message('Your antibody did not kill all of the bacteria.','', 'e.g.', "antigen: #{cell[:antigen]}")
+            IRBChallenge.message('Your antibody did not kill all of the bacteria.','', 'e.g.', "#{cell[:antigen]}")
             return
           end
         end
       end
 
-      IRBChallenge.message('Congratulations! You killed the infection.')
-      @game.level_complete(self)
+      level_complete('Congratulations! You killed the infection.')
     end
 
     def to_s

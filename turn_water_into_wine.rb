@@ -1,12 +1,12 @@
+load File.join(File.dirname(__FILE__), 'objective.rb')
+
 module IRBChallenge
-  class TurnWaterIntoWine
+  class TurnWaterIntoWine < Objective
     attr_reader :beverage
-    attr_reader :complete
 
     def initialize(game)
+      super
       @beverage = Water.new
-      @game = game
-      @complete = false
     end
 
     def help_message
@@ -30,9 +30,7 @@ module IRBChallenge
       elsif @beverage.percent_alcohol <= 0
         IRBChallenge.message(*msg, "Doesn't taste like wine")
       else
-        IRBChallenge.message(*msg, "It's a miracle! You turned the water into wine.")
-        @complete = true
-        @game.level_complete(self)
+        level_complete(*msg, "It's a miracle! You turned the water into wine.")
       end
     end
 

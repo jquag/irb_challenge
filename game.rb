@@ -4,12 +4,6 @@ load File.join(File.dirname(__FILE__), 'kill_the_infection.rb')
 load File.join(File.dirname(__FILE__), 'turn_water_into_wine.rb')
 load File.join(File.dirname(__FILE__), 'defend_the_castle.rb')
 
-#TODO play through
-#TODO fix any grammar
-#TODO better intro message ... show help instead
-#TODO maybe rename objective so tab works better
-#TODO time for each level
-
 module IRBChallenge
 
   def IRBChallenge.message(*lines)
@@ -21,9 +15,10 @@ module IRBChallenge
   class Game
     def initialize
       @level = 1
-      @objectives = [FindTheNeedle.new(self), DefendTheCastle.new(self), KillTheInfection.new(self), TurnWaterIntoWine.new(self), OpenTheLocker.new(self)]
+      @objectives = [FindTheNeedle.new(self), TurnWaterIntoWine.new(self), KillTheInfection.new(self), OpenTheLocker.new(self), DefendTheCastle.new(self)]
       @start_time = Time.now
-      objective
+      help
+      current_objective.start
     end
 
     def to_s
@@ -42,8 +37,9 @@ module IRBChallenge
       if completed == current_objective
         @level += 1
         if @level > @objectives.size
-          IRBChallenge.message("You finished the game in #{Time.now - @start_time} seconds\n", '', score, '', *results)
+          IRBChallenge.message("You finished the game in #{(Time.now - @start_time).floor} seconds", '', score, '', *results)
         else
+          current_objective.start
           IRBChallenge.message('Review next objective:', '> g.objective')
         end
       end
@@ -77,7 +73,7 @@ module IRBChallenge
     def results
       r = []
       r.tap do
-        @objectives.each { |o| r.push("#{o} - #{o.complete ? 'completed' : 'skipped'}") }
+        @objectives.each { |o| r.push("#{o} - #{o.complete ? "completed (#{o.time} seconds)" : 'skipped'}") }
       end
     end
 
@@ -91,4 +87,4 @@ def play
   IRBChallenge::Game.new
 end
 
-IRBChallenge.message('-IRB CHALLENGE-', '', 'Get started:', '> g = play', '> g.help')
+IRBChallenge.message('-IRB CHALLENGE-', '', 'Get started by creating a game instance:', '> g = play')

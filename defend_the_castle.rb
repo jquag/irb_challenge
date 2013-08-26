@@ -1,13 +1,11 @@
+load File.join(File.dirname(__FILE__), 'objective.rb')
+
 module IRBChallenge
-  #TODO finish this objective
-  class DefendTheCastle
+  class DefendTheCastle < Objective
     MAX_ATTACKS = 4
 
-    attr_reader :complete
-
     def initialize(game)
-      @game = game
-      @complete = false
+      super
       @dragon = Dragon.new
     end
 
@@ -48,7 +46,8 @@ module IRBChallenge
         @dragon.attack(attack_method, defense)
 
         if @dragon.defeated?
-          won; return
+          level_complete('Direct hit! The dragon was too weak to dodge the projectile.', 'Congratulations, you have successfully defended the castle.')
+          return
         elsif @dragon.thwarted?
           msg = ["Dragon attack (##{attack_method}) thwarted"]
           msg << 'The dragon is weakened!' if @dragon.weakened?
@@ -69,12 +68,6 @@ module IRBChallenge
     def failed(reason)
       IRBChallenge.message(reason, 'The dragon has breached the castle walls.', '', 'Try again:', '> g.defend_with(defense)')
       @dragon = Dragon.new
-    end
-
-    def won
-      IRBChallenge.message('Direct hit! The dragon was too weak to dodge the projectile.', 'Congratulations, you have successfully defended the castle.')
-      @complete = true
-      @game.level_complete(self)
     end
 
     class Dragon

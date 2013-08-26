@@ -1,13 +1,12 @@
-module IRBChallenge
-  class FindTheNeedle
-    HAYSTACK_SIZE = 10000
+load File.join(File.dirname(__FILE__), 'objective.rb')
 
+module IRBChallenge
+  class FindTheNeedle < Objective
+    HAYSTACK_SIZE = 10000
     attr_reader :haystack
-    attr_reader :complete
 
     def initialize(game)
-      @game = game
-      @complete = false
+      super
       @needle = Needle.new
       @haystack = []
       build_haystack(@haystack, rand(HAYSTACK_SIZE))
@@ -15,10 +14,10 @@ module IRBChallenge
 
     def help_message
       ['Find the needle in the haystack', '',
-       'access the haystack:',
+       'Access the haystack:',
        '> g.haystack',
        '',
-       'present the needle:',
+       'Present the needle:',
        '> g.present(needle)']
     end
 
@@ -28,9 +27,7 @@ module IRBChallenge
 
     def present(obj)
       if obj == @needle
-        IRBChallenge.message('Congratulations! You found it.')
-        @complete = true
-        @game.level_complete(self)
+        level_complete('Congratulations! You found it.')
       else
         IRBChallenge.message('You call that a needle?')
       end

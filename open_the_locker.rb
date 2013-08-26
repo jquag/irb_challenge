@@ -1,10 +1,9 @@
-module IRBChallenge
-  class OpenTheLocker
-    attr_reader :complete
+load File.join(File.dirname(__FILE__), 'objective.rb')
 
+module IRBChallenge
+  class OpenTheLocker < Objective
     def initialize(game)
-      @game = game
-      @complete = false
+      super
       @combination = [rand(10), rand(10), rand(10), rand(10), rand(10), rand(10)]
     end
 
@@ -31,14 +30,17 @@ module IRBChallenge
       @current_combination == @combination
     end
 
+    def current_combo_has_strings
+      @current_combination.find {|c| c.is_a? String}
+    end
+
     def open_locker
       if test_combo
-        IRBChallenge.message('Congratulations! You opened the locker.')
-        @complete = true
-        @game.level_complete(self)
+        level_complete('Congratulations! You opened the locker.')
       else
-        IRBChallenge.message('The locker did not open.')
-        puts
+        msg = ['The locker did not open.']
+        msg << '(the combination must integers)' if current_combo_has_strings
+        IRBChallenge.message(*msg)
       end
     end
 
